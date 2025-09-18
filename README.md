@@ -3,7 +3,7 @@
 A simple, mobile-friendly, and responsive digital menu for restaurants.  
 This project is powered by **HTML, CSS, and JavaScript**, with menu items loaded dynamically from a **Google Sheets (CSV export)**.  
 
-🔗 **Live Demo**: [View Menu](https://your-username.github.io/taco-truck-menu/)
+🔗 **Live Demo**: [View Menu](https://baronjose.github.io/MenuExample/)
 
 ---
 
@@ -74,5 +74,5 @@ This project is ready to deploy on **GitHub Pages**:
 ---
 
 ## 👨‍💻 Author
-Created by **Your Name**.  
-Need a custom version? Reach out at: [your@email.com](mailto:your@email.com).
+Created by Jose Baron.  
+Need a custom version? Reach out at: [contact@baronxdev.com](mailto:contact@baronxdev.com).
