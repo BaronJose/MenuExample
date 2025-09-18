@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>🌮 Taco Truck Menu 🚚</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #fff8f0;
+            color: #333;
+        }
+
+        header {
+            background: #fff8f0;
+            border-bottom: 2px solid #ffcc33;
+            padding: 15px;
+            text-align: center;
+        }
+
+        header .header-content {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        header .info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #e94e1b;
+        }
+
+        header .address,
+        header .phone {
+            font-size: 1em;
+            color: #333;
+        }
+
+        header .phone a {
+            color: #e94e1b;
+            text-decoration: none;
+        }
+
+        /* Specials Ribbon */
+        #specialsRibbon {
+            background: #e94e1b;
+            color: #fff;
+            text-align: center;
+            padding: 8px 0;
+            font-weight: bold;
+            font-size: 1em;
+        }
+
+        #specialsRibbon a {
+            color: #fff;
+            text-decoration: underline;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+
+        #menu {
+            padding: 10px;
+        }
+
+        .menu-category {
+            margin-top: 20px;
+            font-size: 1.4em;
+            font-weight: bold;
+            cursor: pointer;
+            padding-bottom: 5px;
+            border-bottom: 2px solid #ffcc33;
+        }
+
+        .menu-items {
+            display: flex;
+            flex-direction: column;
+            margin-top: 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .menu-items.show {
+            max-height: 2000px;
+        }
+
+        .menu-item {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            background: #fff3e0;
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .menu-item img {
+            width: 100%;
+            aspect-ratio: 1/1;
+            margin-bottom: 8px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 2px solid #ffcc33;
+            cursor: pointer;
+        }
+
+        .menu-details {
+            flex: 1 1 100%;
+            min-width: 0;
+        }
+
+        .menu-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 2px;
+            color: #e94e1b;
+        }
+
+        .menu-desc {
+            font-size: 0.9em;
+            color: #666;
+            word-wrap: break-word;
+        }
+
+        .price {
+            flex-shrink: 0;
+            font-weight: bold;
+            color: #ff9900;
+            white-space: nowrap;
+            font-size: 1em;
+            margin-left: 0;
+            margin-top: 5px;
+        }
+
+        /* Desktop */
+        @media (min-width: 601px) {
+            .menu-item {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+
+            .menu-item img {
+                width: 320px;
+                height: 320px;
+                margin-bottom: 0;
+                margin-right: 15px;
+            }
+
+            .menu-details {
+                flex: 1 1 auto;
+            }
+
+            .price {
+                margin-right: 30px;
+                margin-top: 0;
+                align-self: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <img src="https://s3.amazonaws.com/cdn.designcrowd.com/blog/45-Taco-Logos-for-Your-Taqueria/fast-mexican-taco-by-musiquedesign-brandcrowd.png"
+                alt="Taco Truck Logo">
+            <div class="info">
+                <h1>🌮 Taco Truck 🚚</h1>
+                <div class="address">123 Main Street, City, State</div>
+                <div class="phone">Call us: <a href="tel:+1234567890">+1 (234) 567-890</a></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Specials Ribbon -->
+    <div id="specialsRibbon"></div>
+
+    <div id="menu"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script>
+        const placeholderImage = "https://via.placeholder.com/100?text=Taco";
+
+        async function loadMenu() {
+            const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRaKgZ1ycVG1w5xRnoAM0Gp8fAcrTltlUNiFLdnbJJ5MXAYRklU77P6IqDVD-nPXix2Q9cLJSyWufjb/pub?output=csv";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("Network response was not ok");
+                const csvText = await response.text();
+                const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
+
+                const menuData = parsed.data.map((row, index) => {
+                    const normalized = {};
+                    for (let key in row) normalized[key.trim().toLowerCase()] = row[key].trim();
+                    return {
+                        id: `item-${index}`,
+                        category: normalized['category'] || "",
+                        item: normalized['item'] || "",
+                        description: normalized['description'] || "",
+                        price: normalized['price'] || "",
+                        image: normalized['image'] || placeholderImage,
+                        special: normalized['special'] || "",
+                        ribbon_text: normalized['ribbon_text'] || ""
+
+                    };
+                });
+
+                renderSpecials(menuData);
+                renderMenu(menuData);
+            } catch (err) { console.error("Error loading menu:", err); }
+        }
+
+        function renderSpecials(data) {
+            const ribbon = document.getElementById('specialsRibbon');
+            const specials = data.filter(i => i.special.toLowerCase() === 'yes');
+            if (specials.length) {
+                // Use the first special item's ribbon_text if present, otherwise default
+                const headerText = specials[0].ribbon_text || "Today's Specials:";
+                ribbon.innerHTML = '🌟 ' + headerText + ' ';
+                specials.forEach((i, idx) => {
+                    const link = document.createElement('a');
+                    link.href = `#${i.id}`;
+                    link.innerText = i.item;
+                    link.addEventListener('click', e => {
+                        e.preventDefault();
+                        const target = document.getElementById(i.id);
+                        if (target) {
+                            const parentItemsDiv = target.closest('.menu-items');
+                            if (!parentItemsDiv.classList.contains('show')) {
+                                parentItemsDiv.classList.add('show');
+                                setTimeout(() => { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 300);
+                            } else {
+                                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            }
+                        }
+                    });
+                    ribbon.appendChild(link);
+                    if (idx < specials.length - 1) ribbon.appendChild(document.createTextNode(', '));
+                });
+            } else {
+                ribbon.style.display = 'none';
+            }
+        }
+
+
+        function renderMenu(data) {
+            const container = document.getElementById("menu");
+            container.innerHTML = "";
+            const grouped = {};
+            data.forEach(item => { if (!grouped[item.category]) grouped[item.category] = []; grouped[item.category].push(item); });
+
+            for (const category in grouped) {
+                const catDiv = document.createElement("div");
+                catDiv.className = "menu-category";
+                catDiv.innerText = category;
+                container.appendChild(catDiv);
+
+                const itemsDiv = document.createElement("div");
+                itemsDiv.className = "menu-items";
+
+                grouped[category].forEach(({ id, item, description, price, image }) => {
+                    const itemDiv = document.createElement("div");
+                    itemDiv.className = "menu-item";
+                    itemDiv.id = id;
+                    itemDiv.innerHTML = `
+                        <img src="${image}" alt="${item}" onclick="openImageFullScreen('${image}')">
+                        <div class="menu-details">
+                            <div class="menu-title">${item}</div>
+                            <div class="menu-desc">${description}</div>
+                        </div>
+                        <div class="price">$${price}</div>
+                    `;
+                    itemsDiv.appendChild(itemDiv);
+                });
+
+                container.appendChild(itemsDiv);
+                catDiv.addEventListener('click', () => itemsDiv.classList.toggle('show'));
+            }
+        }
+
+        function openImageFullScreen(url) {
+            const overlay = document.createElement('div');
+            overlay.style.position = 'fixed';
+            overlay.style.top = 0;
+            overlay.style.left = 0;
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.background = 'rgba(0,0,0,0.8)';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.cursor = 'pointer';
+            overlay.style.zIndex = 9999;
+
+            const img = document.createElement('img');
+            img.src = url;
+            img.style.maxWidth = '90%';
+            img.style.maxHeight = '90%';
+            img.style.borderRadius = '12px';
+            overlay.appendChild(img);
+
+            overlay.addEventListener('click', () => overlay.remove());
+            document.body.appendChild(overlay);
+        }
+
+        loadMenu();
+    </script>
+</body>
+
+</html>
