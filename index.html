@@ -93,9 +93,6 @@
         }
 
         .menu-items {
-            display: flex;
-            flex-direction: column;
-            margin-top: 10px;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.5s ease;
@@ -275,14 +272,21 @@
             const container = document.getElementById("menu");
             container.innerHTML = "";
             const grouped = {};
-            data.forEach(item => { if (!grouped[item.category]) grouped[item.category] = []; grouped[item.category].push(item); });
+
+            // Group items by category
+            data.forEach(item => {
+                if (!grouped[item.category]) grouped[item.category] = [];
+                grouped[item.category].push(item);
+            });
 
             for (const category in grouped) {
+                // Category header
                 const catDiv = document.createElement("div");
                 catDiv.className = "menu-category";
                 catDiv.innerText = category;
                 container.appendChild(catDiv);
 
+                // Items wrapper
                 const itemsDiv = document.createElement("div");
                 itemsDiv.className = "menu-items";
 
@@ -291,20 +295,33 @@
                     itemDiv.className = "menu-item";
                     itemDiv.id = id;
                     itemDiv.innerHTML = `
-                        <img src="${image}" alt="${item}" onclick="openImageFullScreen('${image}')">
-                        <div class="menu-details">
-                            <div class="menu-title">${item}</div>
-                            <div class="menu-desc">${description}</div>
-                        </div>
-                        <div class="price">$${price}</div>
-                    `;
+                <img src="${image}" alt="${item}" onclick="openImageFullScreen('${image}')">
+                <div class="menu-details">
+                    <div class="menu-title">${item}</div>
+                    <div class="menu-desc">${description}</div>
+                </div>
+                <div class="price">$${price}</div>
+            `;
                     itemsDiv.appendChild(itemDiv);
                 });
 
                 container.appendChild(itemsDiv);
-                catDiv.addEventListener('click', () => itemsDiv.classList.toggle('show'));
+
+                // Dynamic expand/collapse
+                catDiv.addEventListener("click", () => {
+                    if (itemsDiv.style.maxHeight) {
+                        // collapse
+                        itemsDiv.style.maxHeight = null;
+                        itemsDiv.classList.remove("show");
+                    } else {
+                        // expand to content height
+                        itemsDiv.style.maxHeight = itemsDiv.scrollHeight + "px";
+                        itemsDiv.classList.add("show");
+                    }
+                });
             }
         }
+
 
         function openImageFullScreen(url) {
             const overlay = document.createElement('div');
