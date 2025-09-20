@@ -157,6 +157,49 @@
             margin-top: 5px;
         }
 
+        .top-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #fff8f0cc;
+            /* match header bg */
+            backdrop-filter: blur(8px);
+            padding: 10px 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #ffcc33;
+            /* match header accent */
+            position: static;
+            /* removed sticky */
+            top: 0;
+            /* remove top positioning */
+            z-index: 10;
+            /* no need for high z-index */
+        }
+
+        .nav-link {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #e94e1b;
+            /* match header title */
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: #ffcc33;
+            /* highlight on hover */
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: #e94e1b;
+            /* active link matches main brand color */
+            color: #fff;
+        }
+
+
         /* Desktop */
         @media (min-width: 601px) {
             .menu-item {
@@ -186,13 +229,22 @@
 
 <body>
     <header>
-        <div class="header-content">
+        <nav class="top-nav">
+            <a href="index.html" class="nav-link active">🌮 Food Truck Menu</a>
+            <a href="spa.html" class="nav-link">🧖‍♀️ Spa Menu</a>
+            <a href="mechanic.html" class="nav-link">🔧 Mechanic Menu</a>
+        </nav>
+        <div class="header-content"
+            style="display: flex; align-items: center; justify-content: center; gap: 20px; padding: 10px 20px; background-color: #fff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 12px;">
+
             <img src="https://s3.amazonaws.com/cdn.designcrowd.com/blog/45-Taco-Logos-for-Your-Taqueria/fast-mexican-taco-by-musiquedesign-brandcrowd.png"
-                alt="Taco Truck Logo">
-            <div class="info">
-                <h1>🌮 Taco Truck 🚚</h1>
-                <div class="address">123 Main Street, City, State</div>
-                <div class="phone">Call us: <a href="tel:+1234567890">+1 (234) 567-890</a></div>
+                alt="Taco Truck Logo" style="height: 60px; border-radius: 8px;">
+
+            <div class="info" style="text-align: center;">
+                <h1 style="margin: 0; font-size: 1.8em; color: #e94e1b;">🌮 Taco Truck 🚚</h1>
+                <div class="address" style="font-size: 0.9em;">123 Main Street, City, State</div>
+                <div class="phone" style="font-size: 0.9em;">Call us: <a href="tel:+1234567890">+1 (234) 567-890</a>
+                </div>
             </div>
         </div>
     </header>

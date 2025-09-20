@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spa Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Quicksand', sans-serif;
+            background: #f3f3f3;
+            color: #333;
+        }
+
+        .price-list {
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.6em;
+            margin-bottom: 12px;
+            color: #6a1b9a;
+        }
+
+        .category-header {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 24px 0 12px;
+            color: #4a148c;
+            border-bottom: 2px solid #ce93d8;
+            padding-bottom: 4px;
+        }
+
+        .service-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1em;
+            font-weight: 600;
+            color: #2e7d32;
+        }
+
+        .service-tags {
+            font-size: 0.85em;
+            color: #555;
+        }
+
+        .service-description {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 6px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.85em;
+            color: #555;
+            margin: 20px 0;
+        }
+
+        audio {
+            display: none;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: #ffffffcc;
+            backdrop-filter: blur(8px);
+            padding: 10px 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            position: static;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .nav-link {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #6a1b9a;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: #f3e5f5;
+        }
+
+        .nav-link.active {
+            background: #ce93d8;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav">
+        <a href="index.html" class="nav-link">🌮 Food Truck Menu</a>
+        <a href="spa.html" class="nav-link active">🧖‍♀️ Spa Menu</a>
+        <a href="mechanic.html" class="nav-link">🔧 Mechanic Menu</a>
+    </nav>
+    <div class="price-list">
+        <h1>Spa Services</h1>
+        <div id="services"></div>
+    </div>
+
+    <footer>
+        Book now: <strong>(555) 123-4567</strong> | <a href="#" style="color:#6a1b9a;">Scan QR to book</a>
+    </footer>
+
+    <audio autoplay muted loop>
+        <source
+            src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2f6b6b4f2e.mp3?filename=relaxing-spa-ambient-112974.mp3"
+            type="audio/mpeg">
+    </audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
+    <script>
+        const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmu-ceSl89MMl57TZZ1oKTLR2qARV8f11V577RP7sHT8f7WTzrSFIBbCSLFjr_KEdsqpUFOLJKQZKh/pub?output=csv';
+
+        Papa.parse(sheetURL, {
+            download: true,
+            header: true,
+            complete: function (results) {
+                const servicesDiv = document.getElementById('services');
+                const grouped = {};
+
+                results.data.forEach(service => {
+                    const category = service.Category || 'Other';
+                    if (!grouped[category]) grouped[category] = [];
+                    grouped[category].push(service);
+                });
+
+                Object.keys(grouped).forEach(category => {
+                    const categoryHeader = document.createElement('div');
+                    categoryHeader.className = 'category-header';
+                    categoryHeader.textContent = category;
+                    servicesDiv.appendChild(categoryHeader);
+
+                    grouped[category].forEach(service => {
+                        const card = document.createElement('div');
+                        card.className = 'service-card';
+
+                        card.innerHTML = `
+              <div class="service-header">
+                <span>${service.Service}</span>
+                <span class="service-tags">$${service.Price} · ${service.Duration}</span>
+              </div>
+              <div class="service-description">${service.Description}</div>
+            `;
+
+                        servicesDiv.appendChild(card);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
