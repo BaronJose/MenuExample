@@ -699,10 +699,16 @@
 
         // --- responsive: re-render on resize (debounced) ---
         let resizeTimer;
+        let lastIsDesktop = window.innerWidth >= desktopBreakpoint;
+
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => {
-                renderMenu(menuData);
+                const isDesktop = window.innerWidth >= desktopBreakpoint;
+                if (isDesktop !== lastIsDesktop) {
+                    lastIsDesktop = isDesktop;
+                    renderMenu(menuData);
+                }
             }, 180);
         });
 
