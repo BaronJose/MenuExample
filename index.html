@@ -542,14 +542,25 @@
                 requestAnimationFrame(() => {
                     itemsDiv.style.maxHeight = itemsDiv.scrollHeight + "px";
                 });
+
+                // After transition, unlock height
+                itemsDiv.addEventListener('transitionend', function handler(e) {
+                    if (e.propertyName === 'max-height') {
+                        itemsDiv.style.maxHeight = 'none';
+                        itemsDiv.removeEventListener('transitionend', handler);
+                    }
+                });
+
             } else {
-                itemsDiv.style.maxHeight = itemsDiv.scrollHeight + "px"; // start from current
+                // set back to scrollHeight first (so collapse animates)
+                itemsDiv.style.maxHeight = itemsDiv.scrollHeight + "px";
                 requestAnimationFrame(() => {
                     itemsDiv.classList.remove('show');
-                    itemsDiv.style.maxHeight = null;
+                    itemsDiv.style.maxHeight = null; // collapse to 0
                 });
             }
-            // update aria-expanded on header
+
+            // update aria-expanded + chevron
             const header = itemsDiv.previousElementSibling;
             if (header && header.querySelector('button')) {
                 header.querySelector('button').setAttribute('aria-expanded', String(expand));
@@ -557,6 +568,7 @@
                 if (chev) chev.style.transform = expand ? 'rotate(180deg)' : 'rotate(0deg)';
             }
         }
+
 
 
         // --- Main render ---
