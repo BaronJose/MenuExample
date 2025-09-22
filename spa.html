@@ -1,21 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Spa Menu</title>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        /* 🎨 CSS variables for easy theming */
+        :root {
+            --primary-purple: #6a1b9a;
+            --primary-purple-dark: #4a148c;
+            --primary-purple-light: #ce93d8;
+            --primary-purple-bg: #f3e5f5;
+            --text-color: #333;
+            --text-light: #666;
+            --success-green: #2e7d32;
+            --white: #fff;
+            --bg-light: #f3f3f3;
+        }
+
         body {
             margin: 0;
             font-family: 'Quicksand', sans-serif;
-            background: #f3f3f3;
-            color: #333;
+            background: var(--bg-light);
+            color: var(--text-color);
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            padding: 10px 0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            /* ✅ Make the nav bar stick to the top on scroll */
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .nav-link {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--primary-purple);
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--primary-purple-bg);
+        }
+
+        .nav-link.active {
+            background: var(--primary-purple-light);
+            color: var(--white);
         }
 
         .price-list {
-            max-width: 480px;
+            max-width: 520px;
             margin: 0 auto;
             padding: 16px;
         }
@@ -24,20 +70,28 @@
             text-align: center;
             font-size: 1.6em;
             margin-bottom: 12px;
-            color: #6a1b9a;
+            color: var(--primary-purple);
+        }
+        
+        /* ✅ Styles for loading and error messages */
+        .status-message {
+            text-align: center;
+            margin-top: 40px;
+            font-weight: 600;
+            color: var(--text-light);
         }
 
         .category-header {
             font-size: 1.2em;
             font-weight: bold;
             margin: 24px 0 12px;
-            color: #4a148c;
-            border-bottom: 2px solid #ce93d8;
+            color: var(--primary-purple-dark);
+            border-bottom: 2px solid var(--primary-purple-light);
             padding-bottom: 4px;
         }
 
         .service-card {
-            background: #fff;
+            background: var(--white);
             border-radius: 12px;
             padding: 12px 16px;
             margin-bottom: 12px;
@@ -50,7 +104,7 @@
             align-items: center;
             font-size: 1em;
             font-weight: 600;
-            color: #2e7d32;
+            color: var(--success-green);
         }
 
         .service-tags {
@@ -60,7 +114,7 @@
 
         .service-description {
             font-size: 0.9em;
-            color: #666;
+            color: var(--text-light);
             margin-top: 6px;
         }
 
@@ -69,109 +123,105 @@
             font-size: 0.85em;
             color: #555;
             margin: 20px 0;
-        }
-
-        audio {
-            display: none;
-        }
-
-        .top-nav {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            background: #ffffffcc;
-            backdrop-filter: blur(8px);
-            padding: 10px 0;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            position: static;
-            top: 0;
-            z-index: 10;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .nav-link {
-            font-size: 0.95em;
-            font-weight: 600;
-            color: #6a1b9a;
-            text-decoration: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: background 0.3s ease;
-        }
-
-        .nav-link:hover {
-            background: #f3e5f5;
-        }
-
-        .nav-link.active {
-            background: #ce93d8;
-            color: white;
+            padding: 0 16px;
         }
     </style>
 </head>
-
 <body>
     <nav class="top-nav">
         <a href="index.html" class="nav-link">🌮 Food Truck Menu</a>
         <a href="spa.html" class="nav-link active">🧖‍♀️ Spa Menu</a>
         <a href="mechanic.html" class="nav-link">🔧 Mechanic Menu</a>
     </nav>
-    <div class="price-list">
+
+    <main class="price-list">
         <h1>Spa Services</h1>
-        <div id="services"></div>
-    </div>
+        <div id="services-container">
+            <p class="status-message">🧘‍♀️ Loading relaxing services...</p>
+        </div>
+    </main>
 
     <footer>
-        Book now: <strong>(555) 123-4567</strong> | <a href="#" style="color:#6a1b9a;">Scan QR to book</a>
+        Book now: <strong><a href="tel:+15551234567">(555) 123-4567</a></strong>
     </footer>
-
-    <audio autoplay muted loop>
-        <source
-            src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2f6b6b4f2e.mp3?filename=relaxing-spa-ambient-112974.mp3"
-            type="audio/mpeg">
-    </audio>
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
     <script>
         const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmu-ceSl89MMl57TZZ1oKTLR2qARV8f11V577RP7sHT8f7WTzrSFIBbCSLFjr_KEdsqpUFOLJKQZKh/pub?output=csv';
+        const servicesContainer = document.getElementById('services-container');
+
+        /**
+         * ✅ Securely creates a service card element without using innerHTML.
+         * @param {object} service - An object with service details.
+         * @returns {HTMLElement} The card element.
+         */
+        function createServiceCard(service) {
+            const card = document.createElement('div');
+            card.className = 'service-card';
+
+            const header = document.createElement('div');
+            header.className = 'service-header';
+            
+            const serviceName = document.createElement('span');
+            serviceName.textContent = service.Service;
+
+            const serviceTags = document.createElement('span');
+            serviceTags.className = 'service-tags';
+            serviceTags.textContent = `$${service.Price} · ${service.Duration}`;
+            
+            header.appendChild(serviceName);
+            header.appendChild(serviceTags);
+
+            const description = document.createElement('div');
+            description.className = 'service-description';
+            description.textContent = service.Description;
+
+            card.appendChild(header);
+            card.appendChild(description);
+            return card;
+        }
+        
+        /**
+         * ✅ Renders services grouped by category into the container.
+         * @param {Array<object>} data - The array of service data.
+         */
+        function renderServices(data) {
+            servicesContainer.innerHTML = ''; // Clear loading message
+
+            const grouped = data.reduce((acc, service) => {
+                const category = service.Category || 'Other';
+                if (!acc[category]) acc[category] = [];
+                acc[category].push(service);
+                return acc;
+            }, {});
+
+            for (const category in grouped) {
+                const categoryHeader = document.createElement('div');
+                categoryHeader.className = 'category-header';
+                categoryHeader.textContent = category;
+                servicesContainer.appendChild(categoryHeader);
+
+                grouped[category].forEach(service => {
+                    const card = createServiceCard(service);
+                    servicesContainer.appendChild(card);
+                });
+            }
+        }
 
         Papa.parse(sheetURL, {
             download: true,
             header: true,
-            complete: function (results) {
-                const servicesDiv = document.getElementById('services');
-                const grouped = {};
-
-                results.data.forEach(service => {
-                    const category = service.Category || 'Other';
-                    if (!grouped[category]) grouped[category] = [];
-                    grouped[category].push(service);
-                });
-
-                Object.keys(grouped).forEach(category => {
-                    const categoryHeader = document.createElement('div');
-                    categoryHeader.className = 'category-header';
-                    categoryHeader.textContent = category;
-                    servicesDiv.appendChild(categoryHeader);
-
-                    grouped[category].forEach(service => {
-                        const card = document.createElement('div');
-                        card.className = 'service-card';
-
-                        card.innerHTML = `
-              <div class="service-header">
-                <span>${service.Service}</span>
-                <span class="service-tags">$${service.Price} · ${service.Duration}</span>
-              </div>
-              <div class="service-description">${service.Description}</div>
-            `;
-
-                        servicesDiv.appendChild(card);
-                    });
-                });
+            complete: (results) => {
+                // ✅ Filter out empty rows from the spreadsheet
+                const validData = results.data.filter(s => s.Service && s.Price);
+                renderServices(validData);
+            },
+            // ✅ Add error handling for network or parsing failures
+            error: (err) => {
+                console.error("Data loading error:", err);
+                servicesContainer.innerHTML = `<p class="status-message">❌ Oops! We couldn't load the services right now. Please try again later.</p>`;
             }
         });
     </script>
 </body>
-
 </html>

@@ -5,40 +5,41 @@
     <meta charset="utf-8" />
     <title>🌮 Taco Truck Menu 🚚</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --accent: #e94e1b;
             --accent-2: #ff9900;
             --yellow: #ffcc33;
             --bg: #fff8f0;
-            --card: #fff3e0;
             --text: #333;
             --muted: #666;
             --max-width: 1200px;
         }
 
-        * {
-            box-sizing: border-box
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
         }
 
         body {
             font-family: 'Poppins', system-ui, Arial, sans-serif;
             margin: 0;
-            background: var(--bg);
+            background-color: var(--bg);
             color: var(--text);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            line-height: 1.35;
+            line-height: 1.5;
+            /* Aesthetic: Subtle background texture */
+            background-image: url(https://www.transparenttextures.com/patterns/light-paper-fibers.png);
         }
 
-        /* HEADER / NAV */
+        /* --- HEADER / NAV --- */
         .top-nav {
             display: flex;
             justify-content: center;
             gap: 12px;
             padding: 10px;
-            background: linear-gradient(0deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.7));
+            background: rgba(255, 255, 255, 0.7);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
         }
 
@@ -52,7 +53,7 @@
 
         .nav-link.active {
             background: var(--accent);
-            color: #fff
+            color: #fff;
         }
 
         header .header-content {
@@ -77,22 +78,23 @@
         }
 
         header .info {
-            text-align: center
+            text-align: center;
         }
 
         header h1 {
             margin: 0;
             color: var(--accent);
-            font-size: 1.6rem
+            font-size: 1.6rem;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
         }
 
         header .sub {
             color: var(--muted);
             font-size: 0.95rem;
-            margin-top: 6px
+            margin-top: 6px;
         }
 
-        /* SPECIALS RIBBON */
+        /* --- SPECIALS RIBBON --- */
         #specialsRibbon {
             background: var(--accent);
             color: #fff;
@@ -104,17 +106,17 @@
 
         #specialsRibbon .special-list {
             margin-left: 8px;
-            font-weight: 600
+            font-weight: 600;
         }
 
         #specialsRibbon a {
             color: #fff;
             text-decoration: underline;
             margin: 0 6px;
-            cursor: pointer
+            cursor: pointer;
         }
 
-        /* MENU CONTAINER */
+        /* --- MENU CONTAINER --- */
         #menu {
             max-width: var(--max-width);
             margin: 20px auto;
@@ -125,23 +127,15 @@
             margin-top: 28px;
         }
 
-        /* Category - mobile looks clickable */
         .menu-category {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
             padding: 10px 6px;
-            background: transparent;
             border-bottom: 3px solid var(--yellow);
-            font-size: 1.15rem;
-            font-weight: 700;
-            color: var(--accent);
-            cursor: pointer;
-            border-radius: 6px 6px 0 0;
         }
 
-        .menu-category button {
+        .menu-category-button {
             background: transparent;
             border: 0;
             font-weight: 700;
@@ -150,27 +144,31 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 1.05rem;
+            font-size: 1.15rem;
+            width: 100%;
+            text-align: left;
+            padding: 0;
         }
 
-        .menu-category .chev {
-            transition: transform .25s ease
+        .menu-category-button .chev {
+            margin-left: auto;
+            transition: transform .25s ease;
         }
 
-        /* Items wrapper (collapsible on mobile) */
         .menu-items {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.35s ease-out;
+        }
+
+        .menu-items>.items-wrapper {
             overflow: hidden;
-            transition: max-height .36s cubic-bezier(.2, .9, .2, 1), opacity .25s;
-            max-height: 0;
-            opacity: 0;
-            margin-bottom: 8px;
         }
 
-        .menu-items.show {
-            opacity: 1
+        .menu-items.is-open {
+            grid-template-rows: 1fr;
         }
 
-        /* Menu item - mobile default (side image + details) */
         .menu-item {
             display: flex;
             gap: 12px;
@@ -180,6 +178,8 @@
             padding: 10px;
             margin: 12px 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            opacity: 0;
+            animation: fadeInSlideUp 0.5s ease-out forwards;
         }
 
         .menu-image {
@@ -187,8 +187,8 @@
             height: 112px;
             flex-shrink: 0;
             border-radius: 10px;
-            overflow: hidden;
             border: 2px solid var(--yellow);
+            overflow: hidden;
             background: linear-gradient(180deg, #fff, #f6f0e8);
         }
 
@@ -196,7 +196,9 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            display: block
+            display: block;
+            filter: saturate(1.1) contrast(1.05);
+            transition: transform 0.3s ease-out;
         }
 
         .menu-card {
@@ -217,14 +219,13 @@
         .menu-title {
             font-weight: 700;
             color: var(--accent);
-            font-size: 1.05rem
+            font-size: 1.05rem;
         }
 
         .menu-desc {
             color: var(--muted);
             font-size: 0.95rem;
             margin-top: 6px;
-            white-space: normal
         }
 
         .price {
@@ -234,41 +235,87 @@
             white-space: nowrap;
         }
 
-        /* --- Mobile refinements --- */
+        /* --- AESTHETIC & RESPONSIVE IMPROVEMENTS --- */
+        #menu.is-desktop .menu-category-button {
+            cursor: default;
+        }
+
+        #menu.is-desktop .menu-category-button .chev {
+            display: none;
+        }
+
+        #menu.is-desktop .items-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        #menu.is-desktop .menu-items,
+        #menu.is-desktop .menu-items.is-open {
+            grid-template-rows: 1fr;
+        }
+
+        #menu.is-desktop .menu-item {
+            flex-direction: column;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        #menu.is-desktop .menu-item:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+        }
+
+        #menu.is-desktop .menu-item:hover .menu-image img {
+            transform: scale(1.1);
+        }
+
+        #menu.is-desktop .menu-image {
+            width: 100%;
+            height: 180px;
+            border-radius: 0;
+            border: 0;
+        }
+
+        #menu.is-desktop .menu-card {
+            padding: 14px;
+        }
+
+        #menu.is-desktop .menu-desc {
+            min-height: 48px;
+        }
+
+        /* --- FOOTER STYLES --- */
+        /* MOVED: From inside the media query to apply to all screen sizes */
+        .site-footer {
+            text-align: center;
+            padding: 24px 15px;
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: var(--muted);
+            border-top: 1px solid #e0d5c6;
+        }
+
+        .site-footer p {
+            margin: 0;
+        }
+
+        .site-footer a {
+            /* CHANGED: Link color now inherits from the parent text */
+            color: inherit;
+            font-weight: normal;
+            /* Make font weight match */
+            text-decoration: none;
+            transition: text-decoration 0.2s ease;
+        }
+
+        .site-footer a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
-            .menu-item {
-                padding: 14px;
-                /* more breathing room */
-                gap: 14px;
-                /* space between image and text */
-            }
-
-            .menu-image {
-                width: 128px;
-                /* bigger image */
-                height: 128px;
-            }
-
-            .menu-title {
-                font-size: 1.15rem;
-                /* slightly bigger text */
-            }
-
-            .menu-desc {
-                font-size: 1rem;
-                color: #555;
-            }
-
-            .price {
-                font-size: 1.15rem;
-            }
-
-            #specialsRibbon {
-                font-size: 1.05rem;
-                padding: 10px 14px;
-            }
-
-            /* Collapsed sections look better */
             .menu-section {
                 margin: 22px 0;
                 border-radius: 10px;
@@ -280,120 +327,141 @@
             .menu-category {
                 padding: 14px 10px;
                 background: linear-gradient(90deg, var(--yellow), var(--accent-2));
-                color: #fff;
-                border-radius: 10px 10px 0 0;
-            }
-
-            .menu-items {
-                margin-bottom: 12px;
-                padding: 0 6px;
-                background: #fffaf3;
-            }
-        }
-
-
-        /* Desktop: cards grid, image on top, equal height */
-        @media (min-width:992px) {
-            .menu-category {
-                font-size: 1.45rem;
-                cursor: default;
-                padding: 8px 6px
-            }
-
-            .menu-items {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 20px;
-                max-height: unset !important;
-                opacity: 1 !important;
-            }
-
-            .menu-item {
-                flex-direction: column;
-                padding: 0;
-                overflow: hidden;
-                height: 100%;
-                border-radius: 14px;
-                background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 248, 240, 0.95));
-                transition: transform .18s ease, box-shadow .18s ease;
-            }
-
-            .menu-item:hover {
-                transform: translateY(-6px);
-                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12)
-            }
-
-            .menu-image {
-                width: 100%;
-                height: 180px;
-                border-radius: 0;
                 border: 0;
-                overflow: hidden;
             }
 
-            .menu-image img {
-                border-radius: 0;
-                height: 100%
+            .menu-category-button {
+                color: #fff;
+                font-size: 1.1rem;
             }
 
-            .menu-card {
-                padding: 14px;
-            }
-
-            .menu-top {
-                align-items: center
-            }
-
-            .menu-title {
-                font-size: 1.12rem
-            }
-
-            .menu-desc {
-                margin-top: 10px;
-                color: var(--muted);
-                font-size: 0.96rem;
-                min-height: 48px
-            }
-
-            .price {
-                font-size: 1.05rem;
-                margin-left: 0
-            }
-        }
-
-        /* small helpers */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0
-        }
-
-        a.link-reset {
-            color: inherit;
-            text-decoration: none
-        }
-
-        /* responsive tidy */
-        @media (max-width:520px) {
-            .menu-image {
-                width: 96px;
-                height: 96px
-            }
-
-            header .header-content img {
-                width: 56px;
-                height: 56px
+            .items-wrapper {
+                padding: 0 6px;
             }
 
             header h1 {
-                font-size: 1.3rem
+                font-size: 1.4rem;
             }
+        }
+
+        /* --- AESTHETIC ANIMATIONS --- */
+        @keyframes fadeInSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-item:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .menu-item:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .menu-item:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .menu-item:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .menu-item:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        .menu-item:nth-child(6) {
+            animation-delay: 0.3s;
+        }
+
+        /* --- SKELETON LOADER STYLES --- */
+        .skeleton {
+            background-color: #e0e0e0;
+            border-radius: 8px;
+            animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.6;
+            }
+        }
+
+        .skeleton-section {
+            margin-top: 28px;
+        }
+
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .skeleton-header {
+            height: 40px;
+            width: 200px;
+            margin-bottom: 20px;
+        }
+
+        .skeleton-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .skeleton-image {
+            height: 180px;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-line {
+            height: 20px;
+            margin-bottom: 8px;
+        }
+
+        .skeleton-line-short {
+            height: 20px;
+            width: 60%;
+        }
+
+        @media (max-width: 768px) {
+            .skeleton-grid {
+                display: block;
+            }
+
+            .skeleton-card {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+                margin-bottom: 12px;
+            }
+
+            .skeleton-image {
+                height: 90px;
+                width: 90px;
+                flex-shrink: 0;
+                margin-bottom: 0;
+            }
+
+            .skeleton-text-wrapper {
+                flex-grow: 1;
+            }
+
+
         }
     </style>
 </head>
@@ -404,317 +472,215 @@
         <a class="nav-link" href="spa.html">🧖‍♀️ Spa Menu</a>
         <a class="nav-link" href="mechanic.html">🔧 Mechanic Menu</a>
     </nav>
-
     <header>
         <div class="header-content">
             <img src="https://s3.amazonaws.com/cdn.designcrowd.com/blog/45-Taco-Logos-for-Your-Taqueria/fast-mexican-taco-by-musiquedesign-brandcrowd.png"
-                alt="logo">
+                alt="Taco Truck logo">
             <div class="info">
                 <h1>🌮 Taco Truck 🚚</h1>
-                <div class="sub">123 Main Street · City, State · <a href="tel:+1234567890" class="link-reset">+1 (234)
-                        567-890</a></div>
+                <div class="sub">
+                    123 Main Street · City, State
+                    <br>
+                    <a href="tel:+1234567890" style="color:inherit; text-decoration:none;">+1 (234) 567-890</a>
+                </div>
             </div>
         </div>
     </header>
-
     <div id="specialsRibbon" aria-live="polite" style="display:none"></div>
 
-    <main id="menu" role="main" aria-label="Menu"></main>
+    <main id="menu" role="main" aria-label="Menu">
+        <div class="skeleton-section">
+            <div class="skeleton skeleton-header"></div>
+            <div class="skeleton-grid">
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-text-wrapper">
+                        <div class="skeleton skeleton-line"></div>
+                        <div class="skeleton skeleton-line-short"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-text-wrapper">
+                        <div class="skeleton skeleton-line"></div>
+                        <div class="skeleton skeleton-line-short"></div>
+                    </div>
+                </div>
+                <div class="skeleton-card">
+                    <div class="skeleton-image"></div>
+                    <div class="skeleton-text-wrapper">
+                        <div class="skeleton skeleton-line"></div>
+                        <div class="skeleton skeleton-line-short"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
 
-    <!-- PapaParse (same as you used) -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script>
-        // --- Configuration ---
         const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRaKgZ1ycVG1w5xRnoAM0Gp8fAcrTltlUNiFLdnbJJ5MXAYRklU77P6IqDVD-nPXix2Q9cLJSyWufjb/pub?output=csv";
         const placeholderImage = "https://via.placeholder.com/400x300?text=Taco";
-        const desktopBreakpoint = 992; // px
+        const desktopBreakpoint = 769;
 
-        let menuData = [];
+        let currentLayoutIsDesktop = window.innerWidth >= desktopBreakpoint;
+        let lastWindowWidth = window.innerWidth;
 
-        // --- Utility: normalize CSV row keys/values ---
-        function normalizeRow(row) {
-            const out = {};
-            for (const k in row) {
-                const key = (k || "").toLowerCase().trim();
-                out[key] = (row[k] || "").trim();
-            }
-            return out;
-        }
-
-        // --- Load and parse CSV ---
-        async function loadMenu() {
+        async function loadMenuData() {
             try {
-                const res = await fetch(CSV_URL);
-                if (!res.ok) throw new Error("Failed to fetch CSV");
-                const text = await res.text();
-                const parsed = Papa.parse(text, { header: true, skipEmptyLines: true });
-                menuData = parsed.data.map((r, i) => {
-                    const n = normalizeRow(r);
-                    return {
-                        id: `item-${i}`,
-                        category: n['category'] || "Uncategorized",
-                        item: n['item'] || "Unnamed",
-                        description: n['description'] || "",
-                        price: n['price'] || "",
-                        image: n['image'] || placeholderImage,
-                        special: (n['special'] || "").toLowerCase(),
-                        ribbon_text: n['ribbon_text'] || ""
-                    };
-                });
-            } catch (err) {
-                console.error("Load menu error:", err);
-                // fallback sample if fetch fails
-                menuData = [
-                    { id: "item-fallback-1", category: "Tacos", item: "Carne Asada", description: "Grilled steak, onion, cilantro", price: "3.50", image: placeholderImage, special: "yes", ribbon_text: "Today's Specials" },
-                    { id: "item-fallback-2", category: "Drinks", item: "Horchata", description: "Cinnamon rice drink", price: "2.50", image: placeholderImage, special: "", ribbon_text: "" }
-                ];
-            }
-            renderSpecials(menuData);
-            renderMenu(menuData);
-        }
+                const response = await fetch(CSV_URL);
+                if (!response.ok) throw new Error(`Network response was not ok`);
+                const csvText = await response.text();
+                const parsed = Papa.parse(csvText, { header: true, skipEmptyLines: true });
 
-        // --- Specials ribbon ---
-        function renderSpecials(data) {
-            const ribbon = document.getElementById("specialsRibbon");
-            const specials = data.filter(d => d.special === "yes" || d.special === "y" || d.special === "true");
-            if (!specials.length) {
-                ribbon.style.display = "none";
-                return;
-            }
-            ribbon.style.display = "block";
-
-            const text = specials[0].ribbon_text || "Today's Specials:";
-            ribbon.innerHTML = '';
-
-            const label = document.createElement('span');
-            label.textContent = '🌟 ' + text;
-            ribbon.appendChild(label);
-
-            const list = document.createElement('span');
-            list.className = "special-list";
-
-            specials.forEach((s, idx) => {
-                const a = document.createElement('a');
-                a.href = `#${s.id}`;
-                a.textContent = s.item;
-
-                a.addEventListener('click', (ev) => {
-                    ev.preventDefault();
-                    const target = document.getElementById(s.id);
-                    if (!target) return;
-
-                    const parentItems = target.closest('.menu-items');
-
-                    // Helper to scroll once ready
-                    const scrollToTarget = () => {
-                        requestAnimationFrame(() => {
-                            target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        });
-                    };
-
-                    if (parentItems && !parentItems.classList.contains('show')) {
-                        // Expand section first
-                        toggleSection(parentItems, true);
-
-                        // Wait for the transition to finish (~360ms in CSS) before scrolling
-                        setTimeout(scrollToTarget, 360);
-                    } else {
-                        scrollToTarget();
-                    }
-                });
-
-                list.appendChild(a);
-                if (idx < specials.length - 1) {
-                    const sep = document.createTextNode(' · ');
-                    list.appendChild(sep);
-                }
-            });
-
-            ribbon.appendChild(list);
-        }
-
-
-        // --- Toggle helper for collapsing categories (mobile) ---
-        function toggleSection(itemsDiv, expand) {
-            if (expand === undefined) expand = !itemsDiv.classList.contains('show');
-            if (expand) {
-                itemsDiv.classList.add('show');
-                requestAnimationFrame(() => {
-                    itemsDiv.style.maxHeight = itemsDiv.scrollHeight + "px";
-                });
-
-                // After transition, unlock height
-                itemsDiv.addEventListener('transitionend', function handler(e) {
-                    if (e.propertyName === 'max-height') {
-                        itemsDiv.style.maxHeight = 'none';
-                        itemsDiv.removeEventListener('transitionend', handler);
-                    }
-                });
-
-            } else {
-                // set back to scrollHeight first (so collapse animates)
-                itemsDiv.style.maxHeight = itemsDiv.scrollHeight + "px";
-                requestAnimationFrame(() => {
-                    itemsDiv.classList.remove('show');
-                    itemsDiv.style.maxHeight = null; // collapse to 0
-                });
-            }
-
-            // update aria-expanded + chevron
-            const header = itemsDiv.previousElementSibling;
-            if (header && header.querySelector('button')) {
-                header.querySelector('button').setAttribute('aria-expanded', String(expand));
-                const chev = header.querySelector('.chev');
-                if (chev) chev.style.transform = expand ? 'rotate(180deg)' : 'rotate(0deg)';
+                return parsed.data
+                    .map((row, i) => {
+                        const n = {};
+                        for (const k in row) { n[k.toLowerCase().trim()] = (row[k] || "").trim(); }
+                        return {
+                            id: `item-${i}`,
+                            category: n['category'] || "Uncategorized",
+                            item: n['item'] || "Unnamed",
+                            description: n['description'] || "",
+                            price: n['price'] || "",
+                            image: n['image'] || placeholderImage,
+                            special: (n['special'] || "").toLowerCase() === "yes",
+                            ribbon_text: n['ribbon_text'] || ""
+                        };
+                    })
+                    .filter(item => item.item !== "Unnamed" && item.price !== "");
+            } catch (error) {
+                console.error("Failed to load menu:", error);
+                document.getElementById('menu').innerHTML = `<p style="text-align:center; padding: 40px;">❌ Could not load menu. Please try again later.</p>`;
+                return [];
             }
         }
 
+        function renderMenu(data, container) {
+            container.innerHTML = ""; // Clear the skeleton loader
+            const grouped = data.reduce((acc, it) => {
+                (acc[it.category] = acc[it.category] || []).push(it);
+                return acc;
+            }, {});
 
-
-        // --- Main render ---
-        function renderMenu(data) {
-            const container = document.getElementById("menu");
-            container.innerHTML = "";
-            const grouped = {};
-            data.forEach(it => {
-                const cat = it.category || "Uncategorized";
-                if (!grouped[cat]) grouped[cat] = [];
-                grouped[cat].push(it);
-            });
-
-            const isDesktop = window.innerWidth >= desktopBreakpoint;
-
-            // build each category section
-            Object.keys(grouped).forEach(cat => {
+            Object.keys(grouped).forEach((category, catIndex) => {
                 const section = document.createElement('section');
                 section.className = 'menu-section';
+                const buttonId = `cat-btn-${catIndex}`;
+                const panelId = `cat-panel-${catIndex}`;
 
-                // category header (button for mobile toggle)
                 const header = document.createElement('div');
                 header.className = 'menu-category';
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.innerHTML = `<span>${cat}</span><span aria-hidden="true" class="chev">▾</span>`;
-                btn.setAttribute('aria-expanded', String(isDesktop));
-                header.appendChild(btn);
+                header.innerHTML = `<button id="${buttonId}" class="menu-category-button" aria-expanded="false" aria-controls="${panelId}"><span>${escapeHtml(category)}</span><span aria-hidden="true" class="chev">▾</span></button>`;
                 section.appendChild(header);
 
-                // items container
                 const itemsDiv = document.createElement('div');
+                itemsDiv.id = panelId;
                 itemsDiv.className = 'menu-items';
-                if (isDesktop) {
-                    itemsDiv.classList.add('show');
-                    itemsDiv.style.maxHeight = null;
-                } else {
-                    // collapsed by default on mobile
-                    itemsDiv.style.maxHeight = null;
-                    itemsDiv.classList.remove('show');
-                }
+                itemsDiv.setAttribute('role', 'region');
+                itemsDiv.setAttribute('aria-labelledby', buttonId);
 
-                // create cards
-                grouped[cat].forEach(it => {
+                const itemsWrapper = document.createElement('div');
+                itemsWrapper.className = 'items-wrapper';
+
+                grouped[category].forEach(it => {
                     const card = document.createElement('article');
                     card.className = 'menu-item';
                     card.id = it.id;
-
-                    // inner markup: image + card body
                     card.innerHTML = `
-            <div class="menu-image" aria-hidden="true">
-              <img loading="lazy" src="${escapeHtml(it.image || placeholderImage)}" alt="${escapeHtml(it.item)}">
-            </div>
-            <div class="menu-card">
-              <div class="menu-top">
-                <div class="menu-title">${escapeHtml(it.item)}</div>
-                <div class="price">${it.price ? '$' + escapeHtml(it.price) : ''}</div>
-              </div>
-              <div class="menu-desc">${escapeHtml(it.description)}</div>
-            </div>
-          `;
-                    // image click fullscreen
-                    const img = card.querySelector('.menu-image img');
-                    img.addEventListener('click', () => openImageFullScreen(img.src));
-                    itemsDiv.appendChild(card);
+                    <div class="menu-image" aria-hidden="true">
+                        <img loading="lazy" src="${escapeHtml(it.image)}" alt="${escapeHtml(it.item)}">
+                    </div>
+                    <div class="menu-card">
+                        <div class="menu-top">
+                            <div class="menu-title">${escapeHtml(it.item)}</div>
+                            <div class="price">${it.price ? '$' + escapeHtml(it.price) : ''}</div>
+                        </div>
+                        <div class="menu-desc">${escapeHtml(it.description)}</div>
+                    </div>`;
+                    itemsWrapper.appendChild(card);
                 });
 
+                itemsDiv.appendChild(itemsWrapper);
                 section.appendChild(itemsDiv);
                 container.appendChild(section);
-
-                // event: toggle on mobile only
-                btn.addEventListener('click', () => {
-                    if (window.innerWidth >= desktopBreakpoint) return; // no toggling on desktop
-                    toggleSection(itemsDiv);
-                });
-
-                // on desktop, disable pointer cursor for header button
-                if (isDesktop) {
-                    btn.style.cursor = 'default';
-                    btn.querySelector('.chev').style.display = 'none';
-                } else {
-                    btn.style.cursor = 'pointer';
-                    btn.querySelector('.chev').style.display = 'inline-block';
-                }
             });
         }
 
-        // --- open image overlay ---
-        function openImageFullScreen(url) {
-            const existing = document.querySelector('.image-overlay');
-            if (existing) existing.remove();
+        // ✅ MODIFIED: Added a 'force' parameter to override the check when needed.
+        function updateLayout(force = false) {
+            const newLayoutIsDesktop = window.innerWidth >= desktopBreakpoint;
 
-            const overlay = document.createElement('div');
-            overlay.className = 'image-overlay';
-            overlay.style.position = 'fixed';
-            overlay.style.inset = '0';
-            overlay.style.background = 'rgba(0,0,0,0.82)';
-            overlay.style.display = 'flex';
-            overlay.style.alignItems = 'center';
-            overlay.style.justifyContent = 'center';
-            overlay.style.zIndex = 99999;
-            overlay.style.cursor = 'zoom-out';
+            // ✅ MODIFIED: The check now respects the 'force' parameter.
+            if (!force && newLayoutIsDesktop === currentLayoutIsDesktop) {
+                return;
+            }
 
-            const img = document.createElement('img');
-            img.src = url;
-            img.alt = '';
-            img.style.maxWidth = '92%';
-            img.style.maxHeight = '92%';
-            img.style.borderRadius = '10px';
-            overlay.appendChild(img);
+            currentLayoutIsDesktop = newLayoutIsDesktop;
 
-            overlay.addEventListener('click', () => overlay.remove());
-            document.body.appendChild(overlay);
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('is-desktop', newLayoutIsDesktop);
+
+            menu.querySelectorAll('.menu-category-button').forEach(btn => {
+                const panel = document.getElementById(btn.getAttribute('aria-controls'));
+                if (!panel) return;
+
+                const shouldBeOpen = newLayoutIsDesktop;
+                btn.setAttribute('aria-expanded', shouldBeOpen);
+                panel.classList.toggle('is-open', shouldBeOpen);
+                btn.querySelector('.chev').style.transform = shouldBeOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
         }
 
-
-        // --- small HTML escape to avoid injecting raw CSV markup into DOM ---
-        function escapeHtml(str) {
-            if (str === null || str === undefined) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-
-        // --- responsive: re-render on resize (debounced) ---
-        let resizeTimer;
-        let lastIsDesktop = window.innerWidth >= desktopBreakpoint;
-
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimer);
-            resizeTimer = setTimeout(() => {
-                const isDesktop = window.innerWidth >= desktopBreakpoint;
-                if (isDesktop !== lastIsDesktop) {
-                    lastIsDesktop = isDesktop;
-                    renderMenu(menuData);
+        function attachEventListeners() {
+            const menu = document.getElementById('menu');
+            menu.addEventListener('click', (e) => {
+                if (window.innerWidth >= desktopBreakpoint) return;
+                const button = e.target.closest('.menu-category-button');
+                if (button) {
+                    const panel = document.getElementById(button.getAttribute('aria-controls'));
+                    const isOpening = !panel.classList.contains('is-open');
+                    button.setAttribute('aria-expanded', isOpening);
+                    panel.classList.toggle('is-open', isOpening);
+                    button.querySelector('.chev').style.transform = isOpening ? 'rotate(180deg)' : 'rotate(0deg)';
                 }
-            }, 180);
-        });
+            });
 
-        // initial load
-        loadMenu();
+            let resizeTimer;
+            function handleResize() {
+                if (window.innerWidth === lastWindowWidth) {
+                    return;
+                }
+                lastWindowWidth = window.innerWidth;
+                updateLayout();
+            }
+
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(handleResize, 150);
+            });
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[m]);
+        }
+
+        async function initMenu() {
+            const menuContainer = document.getElementById('menu');
+            const menuData = await loadMenuData();
+            if (menuData.length > 0) {
+                renderMenu(menuData, menuContainer);
+                // ✅ MODIFIED: Call updateLayout with 'true' to force the initial setup.
+                updateLayout(true);
+                attachEventListeners();
+            }
+        }
+
+        initMenu();
     </script>
+    <footer class="site-footer">
+        <p>Proudly made by <a href="mailto:contact@baronxdev.com">baronXdev</a></p>
+    </footer>
 </body>
 
 </html>

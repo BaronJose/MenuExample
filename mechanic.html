@@ -6,19 +6,31 @@
   <title>Mobile Mechanic Services</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    /* 🎨 CSS variables for easy theme management */
+    :root {
+      --primary-color: #ff9800;
+      --dark-blue: #263238;
+      --text-color: #333;
+      --text-light: #666;
+      --background-light: #f5f5f5;
+      --white: #fff;
+      --border-color: #b0bec5;
+      --success-green: #1b5e20;
+    }
+
     body {
       margin: 0;
       font-family: 'Quicksand', sans-serif;
-      background: #f5f5f5;
-      color: #333;
+      background: var(--background-light);
+      color: var(--text-color);
     }
 
     .top-nav {
       display: flex;
       justify-content: space-around;
-      background: #263238;
+      background: var(--dark-blue);
       padding: 10px 0;
-      color: white;
+      color: var(--white);
       font-weight: 600;
       font-size: 0.95em;
       position: sticky;
@@ -27,18 +39,18 @@
     }
 
     .top-nav a {
-      color: #fff;
+      color: var(--white);
       text-decoration: none;
       padding: 6px 12px;
       border-radius: 6px;
     }
 
     .top-nav a.active {
-      background: #ff9800;
+      background: var(--primary-color);
     }
 
     .menu-container {
-      max-width: 480px;
+      max-width: 600px; /* Slightly wider for better readability */
       margin: 0 auto;
       padding: 16px;
     }
@@ -47,7 +59,7 @@
       text-align: center;
       font-size: 1.6em;
       margin-bottom: 8px;
-      color: #ff9800;
+      color: var(--primary-color);
     }
 
     .disclaimer {
@@ -56,18 +68,26 @@
       color: #777;
       margin-bottom: 16px;
     }
+    
+    /* Loading and Error message styles */
+    .status-message {
+      text-align: center;
+      margin-top: 40px;
+      font-weight: 600;
+      color: var(--text-light);
+    }
 
     .category-header {
       font-size: 1.2em;
       font-weight: bold;
       margin: 24px 0 12px;
       color: #37474f;
-      border-bottom: 2px solid #b0bec5;
+      border-bottom: 2px solid var(--border-color);
       padding-bottom: 4px;
     }
 
     .service-card {
-      background: #fff;
+      background: var(--white);
       border-radius: 12px;
       padding: 12px 16px;
       margin-bottom: 12px;
@@ -80,7 +100,7 @@
       align-items: center;
       font-size: 1em;
       font-weight: 600;
-      color: #1b5e20;
+      color: var(--success-green);
     }
 
     .service-tags {
@@ -90,13 +110,13 @@
 
     .service-description {
       font-size: 0.9em;
-      color: #666;
+      color: var(--text-light);
       margin-top: 6px;
     }
 
     .service-note {
       font-size: 0.8em;
-      color: #ff9800;
+      color: var(--primary-color);
       margin-top: 4px;
     }
 
@@ -105,10 +125,6 @@
       font-size: 0.85em;
       color: #555;
       margin: 20px 0;
-    }
-
-    audio {
-      display: none;
     }
   </style>
 </head>
@@ -119,61 +135,108 @@
     <a href="mechanic.html" class="active">🔧 Mechanic</a>
   </nav>
 
-  <div class="menu-container">
+  <main class="menu-container">
     <h1>Mobile Mechanic Services</h1>
     <p class="disclaimer">
       🚗 Prices shown are for standard vehicles. SUVs, trucks, and luxury models may vary.<br>📍 Mobile service available — we come to you!
     </p>
-    <div id="services"></div>
-  </div>
+    <div id="services-container">
+        <p class="status-message">⚙️ Loading services...</p>
+    </div>
+  </main>
 
   <footer>
-    Call us: <strong>(555) 987-6543</strong> | <a href="#" style="color:#ff9800;">Book Appointment</a>
+    Call us: <strong><a href="tel:+15559876543">(555) 987-6543</a></strong> | 
+    <a href="mailto:booking@example.com" style="color:var(--primary-color);">Book Appointment</a>
   </footer>
-
-  <audio autoplay muted loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2f6b6b4f2e.mp3?filename=relaxing-spa-ambient-112974.mp3" type="audio/mpeg">
-  </audio>
 
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
   <script>
     const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQoI7pnw6tOJ8f-SU-t_MvqbKlZpvDLWzDzD7rw9ju5QiLkkY-mE-pjdDReGENLnJx5m5-1xV_fiZvH/pub?output=csv';
+    const servicesContainer = document.getElementById('services-container');
+
+    /**
+     * ✅ Creates a single service card element securely.
+     * @param {object} service - The service data object.
+     * @returns {HTMLElement} - The service card div element.
+     */
+    function createServiceCard(service) {
+      const card = document.createElement('div');
+      card.className = 'service-card';
+
+      // Create header
+      const header = document.createElement('div');
+      header.className = 'service-header';
+      
+      const serviceName = document.createElement('span');
+      serviceName.textContent = service.Service;
+
+      const serviceTags = document.createElement('span');
+      serviceTags.className = 'service-tags';
+      serviceTags.textContent = `$${service.Price} · ${service.Duration}`;
+      
+      header.appendChild(serviceName);
+      header.appendChild(serviceTags);
+
+      // Create description
+      const description = document.createElement('div');
+      description.className = 'service-description';
+      description.textContent = service.Description;
+
+      // Create note
+      const note = document.createElement('div');
+      note.className = 'service-note';
+      note.textContent = '📍 Mobile service available';
+
+      // Append all parts to the card
+      card.appendChild(header);
+      card.appendChild(description);
+      card.appendChild(note);
+
+      return card;
+    }
+
+    /**
+     * ✅ Renders all services grouped by category.
+     * @param {Array<object>} data - The array of service objects.
+     */
+    function renderServices(data) {
+      servicesContainer.innerHTML = ''; // Clear the "Loading..." message
+      
+      // Group services by category
+      const grouped = data.reduce((acc, service) => {
+        const category = service.Category || 'General';
+        if (!acc[category]) acc[category] = [];
+        acc[category].push(service);
+        return acc;
+      }, {});
+
+      // Create and append elements for each category and service
+      for (const category in grouped) {
+        const categoryHeader = document.createElement('div');
+        categoryHeader.className = 'category-header';
+        categoryHeader.textContent = category;
+        servicesContainer.appendChild(categoryHeader);
+
+        grouped[category].forEach(service => {
+          const card = createServiceCard(service);
+          servicesContainer.appendChild(card);
+        });
+      }
+    }
 
     Papa.parse(sheetURL, {
       download: true,
       header: true,
-      complete: function(results) {
-        const servicesDiv = document.getElementById('services');
-        const grouped = {};
-
-        results.data.forEach(service => {
-          const category = service.Category || 'General';
-          if (!grouped[category]) grouped[category] = [];
-          grouped[category].push(service);
-        });
-
-        Object.keys(grouped).forEach(category => {
-          const categoryHeader = document.createElement('div');
-          categoryHeader.className = 'category-header';
-          categoryHeader.textContent = category;
-          servicesDiv.appendChild(categoryHeader);
-
-          grouped[category].forEach(service => {
-            const card = document.createElement('div');
-            card.className = 'service-card';
-
-            card.innerHTML = `
-              <div class="service-header">
-                <span>${service.Service}</span>
-                <span class="service-tags">$${service.Price} · ${service.Duration}</span>
-              </div>
-              <div class="service-description">${service.Description}</div>
-              <div class="service-note">📍 Mobile service available</div>
-            `;
-
-            servicesDiv.appendChild(card);
-          });
-        });
+      complete: (results) => {
+        // Filter out any potentially empty rows from the CSV
+        const validData = results.data.filter(s => s.Service && s.Price);
+        renderServices(validData);
+      },
+      // ✅ Handle potential network or parsing errors
+      error: (err) => {
+        console.error('Failed to load or parse data:', err);
+        servicesContainer.innerHTML = '<p class="status-message">❌ Sorry, we couldn\'t load our services right now. Please try again later.</p>';
       }
     });
   </script>
