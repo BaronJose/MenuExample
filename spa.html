@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spa Menu</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <title>Spa Menu - Enhanced Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 🎨 CSS variables for easy theming */
         :root {
             --primary-purple: #6a1b9a;
             --primary-purple-dark: #4a148c;
-            --primary-purple-light: #ce93d8;
+            --primary-purple-light: #ab47bc;
             --primary-purple-bg: #f3e5f5;
+            --gold: #FFD700;
             --text-color: #333;
             --text-light: #666;
             --success-green: #2e7d32;
             --white: #fff;
-            --bg-light: #f3f3f3;
+            --bg-light: #f9f6fa;
         }
 
         body {
@@ -26,167 +27,387 @@
             color: var(--text-color);
         }
 
+        /* Navigation Bar */
         .top-nav {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
             padding: 10px 0;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            /* ✅ Make the nav bar stick to the top on scroll */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             position: sticky;
             top: 0;
-            z-index: 10;
-            border-bottom: 1px solid #ddd;
+            z-index: 100;
+            border-bottom: 1px solid #eee;
         }
 
         .nav-link {
-            font-size: 0.95em;
+            font-size: 0.9em;
             font-weight: 600;
             color: var(--primary-purple);
             text-decoration: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: background 0.3s ease;
+            padding: 8px 12px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
         }
 
         .nav-link:hover {
             background: var(--primary-purple-bg);
+            color: var(--primary-purple-dark);
         }
 
         .nav-link.active {
-            background: var(--primary-purple-light);
+            background: var(--primary-purple);
             color: var(--white);
+            box-shadow: 0 2px 4px rgba(106, 27, 154, 0.2);
         }
 
+        /* Hero Banner */
+        .hero-banner {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://placehold.co/600x200/ab47bc/f3e5f5?text=Serenity+Spa');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .hero-banner h1 {
+            margin: 0;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        /* Main Content */
         .price-list {
-            max-width: 520px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 16px;
         }
 
-        h1 {
-            text-align: center;
-            font-size: 1.6em;
-            margin-bottom: 12px;
-            color: var(--primary-purple);
-        }
-        
-        /* ✅ Styles for loading and error messages */
         .status-message {
             text-align: center;
-            margin-top: 40px;
+            padding: 40px 0;
             font-weight: 600;
             color: var(--text-light);
         }
 
         .category-header {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin: 24px 0 12px;
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 32px 0 16px;
             color: var(--primary-purple-dark);
-            border-bottom: 2px solid var(--primary-purple-light);
-            padding-bottom: 4px;
+            border-bottom: 3px solid var(--primary-purple-light);
+            padding-bottom: 8px;
         }
 
+        /* Service Card Styling */
         .service-card {
+            display: flex;
             background: var(--white);
             border-radius: 12px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.07);
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .service-details {
             padding: 12px 16px;
-            margin-bottom: 12px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .service-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            font-size: 1em;
+            align-items: flex-start;
+            margin-bottom: 4px;
+        }
+
+        .service-title-group {
+            flex-grow: 1;
+        }
+
+        .service-name {
+            font-size: 1.1em;
             font-weight: 600;
-            color: var(--success-green);
+            color: var(--primary-purple-dark);
+            margin-right: 8px;
+            display: inline-block;
         }
 
         .service-tags {
-            font-size: 0.85em;
-            color: #555;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: right;
+            flex-shrink: 0;
         }
 
         .service-description {
             font-size: 0.9em;
             color: var(--text-light);
-            margin-top: 6px;
+            margin-top: 4px;
+            flex-grow: 1;
         }
 
-        footer {
+        /* ✨ Promotional Tags ✨ */
+        .promo-tags {
+            display: inline-block;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-right: 6px;
+            color: var(--white);
+        }
+
+        .tag-featured {
+            background: linear-gradient(45deg, var(--gold), #f0c301);
+            color: #533e00;
+        }
+
+        .tag-new {
+            background: linear-gradient(45deg, var(--primary-purple-light), var(--primary-purple));
+        }
+
+        .tag-sale {
+            background: linear-gradient(45deg, #e53935, #c62828);
+            /* Red gradient */
+        }
+
+        /* ✨ Floating Action Button ✨ */
+        .fab-book-now {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, var(--primary-purple-light), var(--primary-purple));
+            color: var(--white);
+            font-size: 1em;
+            font-weight: 600;
+            padding: 16px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .fab-book-now:hover {
+            transform: scale(1.05);
+        }
+
+        /* ✨ NEW: Modal Styles ✨ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 24px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
-            font-size: 0.85em;
-            color: #555;
-            margin: 20px 0;
-            padding: 0 16px;
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            font-size: 1.5em;
+            color: var(--primary-purple-dark);
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .modal-cta-button {
+            display: block;
+            width: 100%;
+            background: var(--primary-purple);
+            color: var(--white);
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s ease;
+        }
+
+        .modal-cta-button:hover {
+            background: var(--primary-purple-dark);
+        }
+
+        .modal-close-button {
+            margin-top: 8px;
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-weight: 600;
+            cursor: pointer;
         }
     </style>
 </head>
+
 <body>
     <nav class="top-nav">
-        <a href="index.html" class="nav-link">🌮 Food Truck Menu</a>
-        <a href="spa.html" class="nav-link active">🧖‍♀️ Spa Menu</a>
-        <a href="mechanic.html" class="nav-link">🔧 Mechanic Menu</a>
+        <a href="index.html" class="nav-link">🌮 Food Truck</a>
+        <a href="spa.html" class="nav-link active">🧖‍♀️ Spa</a>
+        <a href="mechanic.html" class="nav-link">🔧 Mechanic</a>
     </nav>
 
+    <header class="hero-banner">
+        <h1>Serenity Spa</h1>
+    </header>
+
     <main class="price-list">
-        <h1>Spa Services</h1>
         <div id="services-container">
             <p class="status-message">🧘‍♀️ Loading relaxing services...</p>
         </div>
     </main>
 
-    <footer>
-        Book now: <strong><a href="tel:+15551234567">(555) 123-4567</a></strong>
-    </footer>
+    <div id="bookNowBtn" class="fab-book-now">Book Now</div>
+
+    <!-- ✨ NEW: Booking Upsell Modal ✨ -->
+    <div id="bookingModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Turn Clicks into Clients</h2>
+            <p>
+                This button could link to an online booking system, allowing your customers to schedule appointments
+                24/7, right from your menu.
+                This saves you time and captures business even when you're closed.
+            </p>
+            <div class="modal-actions">
+                <a href="mailto:your-email@example.com?subject=Inquiry: Online Booking Feature"
+                    class="modal-cta-button">Add This Feature</a>
+                <button id="closeModalBtn" class="modal-close-button">Maybe Later</button>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.3.2/papaparse.min.js"></script>
     <script>
+        // Data is pulled from a Google Sheet. To add images and tags, simply add
+        // 'ImageURL' and 'Tags' columns to your sheet.
+        // Tags should be comma-separated, e.g., "Featured,New"
         const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRmu-ceSl89MMl57TZZ1oKTLR2qARV8f11V577RP7sHT8f7WTzrSFIBbCSLFjr_KEdsqpUFOLJKQZKh/pub?output=csv';
         const servicesContainer = document.getElementById('services-container');
 
-        /**
-         * ✅ Securely creates a service card element without using innerHTML.
-         * @param {object} service - An object with service details.
-         * @returns {HTMLElement} The card element.
-         */
         function createServiceCard(service) {
             const card = document.createElement('div');
             card.className = 'service-card';
 
+            if (service.ImageURL) {
+                const img = document.createElement('img');
+                img.src = service.ImageURL;
+                img.alt = service.Service;
+                img.className = 'service-image';
+                card.appendChild(img);
+            }
+
+            const details = document.createElement('div');
+            details.className = 'service-details';
+
             const header = document.createElement('div');
             header.className = 'service-header';
-            
+
             const serviceName = document.createElement('span');
+            serviceName.className = 'service-name';
             serviceName.textContent = service.Service;
+
+            const titleGroup = document.createElement('div');
+            titleGroup.className = 'service-title-group';
+            titleGroup.appendChild(serviceName);
+
+            if (service.Tags) {
+                const promoTags = document.createElement('div');
+                promoTags.className = 'promo-tags';
+
+                service.Tags.split(',').forEach(tagStr => {
+                    const tag = tagStr.trim();
+                    if (tag) {
+                        const span = document.createElement('span');
+                        span.className = `tag tag-${tag.toLowerCase()}`;
+                        span.textContent = tag;
+                        promoTags.appendChild(span);
+                    }
+                });
+                titleGroup.appendChild(promoTags);
+            }
 
             const serviceTags = document.createElement('span');
             serviceTags.className = 'service-tags';
             serviceTags.textContent = `$${service.Price} · ${service.Duration}`;
-            
-            header.appendChild(serviceName);
+
+            header.appendChild(titleGroup);
             header.appendChild(serviceTags);
 
             const description = document.createElement('div');
             description.className = 'service-description';
             description.textContent = service.Description;
 
-            card.appendChild(header);
-            card.appendChild(description);
+            details.appendChild(header);
+            details.appendChild(description);
+
+            card.appendChild(details);
             return card;
         }
-        
-        /**
-         * ✅ Renders services grouped by category into the container.
-         * @param {Array<object>} data - The array of service data.
-         */
+
         function renderServices(data) {
-            servicesContainer.innerHTML = ''; // Clear loading message
+            servicesContainer.innerHTML = '';
 
             const grouped = data.reduce((acc, service) => {
                 const category = service.Category || 'Other';
@@ -212,16 +433,34 @@
             download: true,
             header: true,
             complete: (results) => {
-                // ✅ Filter out empty rows from the spreadsheet
                 const validData = results.data.filter(s => s.Service && s.Price);
                 renderServices(validData);
             },
-            // ✅ Add error handling for network or parsing failures
             error: (err) => {
                 console.error("Data loading error:", err);
                 servicesContainer.innerHTML = `<p class="status-message">❌ Oops! We couldn't load the services right now. Please try again later.</p>`;
             }
         });
+
+        // ✨ NEW: Modal Interaction Logic ✨
+        document.addEventListener('DOMContentLoaded', () => {
+            const bookNowBtn = document.getElementById('bookNowBtn');
+            const bookingModal = document.getElementById('bookingModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
+            const openModal = () => bookingModal.classList.add('active');
+            const closeModal = () => bookingModal.classList.remove('active');
+
+            bookNowBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+            // Also close modal if user clicks the background overlay
+            bookingModal.addEventListener('click', (event) => {
+                if (event.target === bookingModal) {
+                    closeModal();
+                }
+            });
+        });
     </script>
 </body>
+
 </html>

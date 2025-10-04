@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Menu Examples</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8 md:py-16">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-2">Digital Menu Examples</h1>
+            <p class="text-lg text-gray-600">See how our dynamic digital menus adapt to any business.</p>
+        </header>
+
+        <!-- Dynamic Menu List -->
+        <!-- This is where the menu items will be automatically inserted by the script -->
+        <div id="menu-list" class="max-w-3xl mx-auto space-y-4">
+            <!-- Menu list items will be generated here -->
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center mt-16">
+            <p class="text-gray-500">&copy; 2025 BaronXdev. All Rights Reserved.</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // --- EDIT THIS SECTION TO ADD, REMOVE, OR CHANGE MENUS ---
+        // To add a new menu, just copy one of the blocks (from { to },) and paste it.
+        // I've updated the URLs to be relative paths, assuming the menu files are in the same folder.
+        const menus = [
+            {
+                name: "Serenity Spa Services",
+                description: "A complete list of our rejuvenating treatments, from massages to facials and body wraps.",
+                url: "./spa.html", // <-- Assumes a file named "spa-menu.html" is in the same directory
+                icon: "💆‍♀️",
+                tag: "Wellness & Beauty"
+            },
+            {
+                name: "Roadside Bites Food Truck",
+                description: "Gourmet street food on the go. Check out today's specials, combos, and locations.",
+                url: "./food.html", // <-- Assumes a file is in the same directory
+                icon: "🚚",
+                tag: "Mobile & Dynamic"
+            },
+            {
+                name: "AutoCare Center Services",
+                description: "Transparent pricing for all our auto services, from oil changes to engine diagnostics.",
+                url: "./mechanic.html", // <-- Assumes a file is in the same directory
+                icon: "🔧",
+                tag: "Service & Parts List"
+            }
+        ];
+        // --- END OF EDITABLE SECTION ---
+
+
+        // This function runs when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuList = document.getElementById('menu-list');
+
+            // If there are no menus, display a message
+            if (menus.length === 0) {
+                menuList.innerHTML = `<p class="text-center text-gray-500">No menus are available at this time. Please check back later!</p>`;
+                return;
+            }
+
+            // Loop through each menu in the list above and create a list item for it
+            menus.forEach(menu => {
+                // The entire list item is now a clickable link for better mobile UX
+                const linkItem = document.createElement('a');
+                linkItem.href = menu.url;
+                linkItem.target = "_blank";
+                linkItem.rel = "noopener noreferrer";
+                linkItem.className = "block bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800";
+
+                const tagHTML = menu.tag 
+                    ? `<span class="ml-3 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${menu.tag}</span>` 
+                    : '';
+
+                // Add an arrow icon to suggest it's a clickable link
+                linkItem.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <div class="flex-grow">
+                            <div class="flex items-center">
+                                <span class="text-3xl mr-4">${menu.icon}</span>
+                                <h3 class="text-xl font-bold text-gray-800">${menu.name}</h3>
+                                ${tagHTML}
+                            </div>
+                            <p class="text-gray-600 mt-2 sm:pl-12">${menu.description}</p>
+                        </div>
+                        <div class="flex-shrink-0 text-gray-400">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                        </div>
+                    </div>
+                `;
+                
+                menuList.appendChild(linkItem);
+            });
+        });
+    </script>
+
+</body>
+</html>
+
