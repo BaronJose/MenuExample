@@ -29,36 +29,48 @@
             background-color: var(--bg);
             color: var(--text);
             line-height: 1.5;
-            /* Aesthetic: Subtle background texture */
             background-image: url(https://www.transparenttextures.com/patterns/light-paper-fibers.png);
         }
 
-        /* --- HEADER / NAV --- */
+        /* --- ✨ IMPROVED HEADER / NAV --- */
         .top-nav {
             display: flex;
             justify-content: center;
             gap: 12px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.7);
+            padding: 12px;
+            /* Frosted glass effect */
+            background: rgba(255, 248, 240, 0.85);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            /* Makes the nav sticky */
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
         }
 
         .nav-link {
-            padding: 8px 12px;
-            border-radius: 8px;
+            padding: 8px 16px;
+            border-radius: 20px; /* More rounded "pill" shape */
             text-decoration: none;
             color: var(--accent);
             font-weight: 600;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-link:hover {
+            background-color: rgba(233, 78, 27, 0.1);
         }
 
         .nav-link.active {
             background: var(--accent);
             color: #fff;
+            box-shadow: 0 2px 8px rgba(233, 78, 27, 0.3);
         }
 
         header .header-content {
             max-width: var(--max-width);
-            margin: 18px auto;
+            margin: 24px auto 18px; /* Added more top margin */
             padding: 12px;
             display: flex;
             gap: 20px;
@@ -288,7 +300,6 @@
         }
 
         /* --- FOOTER STYLES --- */
-        /* MOVED: From inside the media query to apply to all screen sizes */
         .site-footer {
             text-align: center;
             padding: 24px 15px;
@@ -303,10 +314,8 @@
         }
 
         .site-footer a {
-            /* CHANGED: Link color now inherits from the parent text */
             color: inherit;
             font-weight: normal;
-            /* Make font weight match */
             text-decoration: none;
             transition: text-decoration 0.2s ease;
         }
@@ -340,7 +349,18 @@
             }
 
             header h1 {
-                font-size: 1.4rem;
+                font-size: 1.3rem; /* EDITED: Made smaller */
+            }
+
+            /* ✨ ADDED: Mobile-specific font size adjustments */
+            .menu-title {
+                font-size: 1rem;
+            }
+            .menu-desc {
+                font-size: 0.9rem;
+            }
+            .price {
+                font-size: 1rem;
             }
         }
 
@@ -606,12 +626,10 @@
                 container.appendChild(section);
             });
         }
-
-        // ✅ MODIFIED: Added a 'force' parameter to override the check when needed.
+        
         function updateLayout(force = false) {
             const newLayoutIsDesktop = window.innerWidth >= desktopBreakpoint;
-
-            // ✅ MODIFIED: The check now respects the 'force' parameter.
+            
             if (!force && newLayoutIsDesktop === currentLayoutIsDesktop) {
                 return;
             }
@@ -628,7 +646,9 @@
                 const shouldBeOpen = newLayoutIsDesktop;
                 btn.setAttribute('aria-expanded', shouldBeOpen);
                 panel.classList.toggle('is-open', shouldBeOpen);
-                btn.querySelector('.chev').style.transform = shouldBeOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                if (btn.querySelector('.chev')) {
+                   btn.querySelector('.chev').style.transform = shouldBeOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+                }
             });
         }
 
@@ -670,7 +690,6 @@
             const menuData = await loadMenuData();
             if (menuData.length > 0) {
                 renderMenu(menuData, menuContainer);
-                // ✅ MODIFIED: Call updateLayout with 'true' to force the initial setup.
                 updateLayout(true);
                 attachEventListeners();
             }
@@ -684,3 +703,4 @@
 </body>
 
 </html>
+
