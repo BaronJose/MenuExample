@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
         }
     </style>
 </head>
+
 <body class="bg-gray-50">
 
     <!-- Main Container -->
@@ -63,6 +65,13 @@
                 url: "./mechanic.html", // <-- Assumes a file is in the same directory
                 icon: "🔧",
                 tag: "Service & Parts List"
+            },
+            {
+                name: "Handmade Goods Boutique",
+                description: "Explore our unique collection of artisan crafts, jewelry, and home decor.",
+                url: "./handmade.html", // <-- Assumes a file is in the same directory
+                icon: "🛍️",
+                tag: "Handmade & Unique"
             }
         ];
         // --- END OF EDITABLE SECTION ---
@@ -87,8 +96,8 @@
                 linkItem.rel = "noopener noreferrer";
                 linkItem.className = "block bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-800";
 
-                const tagHTML = menu.tag 
-                    ? `<span class="ml-3 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${menu.tag}</span>` 
+                const tagHTML = menu.tag
+                    ? `<span class="ml-3 bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">${menu.tag}</span>`
                     : '';
 
                 // Add an arrow icon to suggest it's a clickable link
@@ -107,12 +116,12 @@
                         </div>
                     </div>
                 `;
-                
+
                 menuList.appendChild(linkItem);
             });
         });
     </script>
 
 </body>
-</html>
 
+</html>
